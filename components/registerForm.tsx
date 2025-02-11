@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import AuthIcons from './authIcons';
 
-const Form = () => {
+const RegisterForm = () => {
   return (
     <form action="#!" className="mt-10" id="registerForm">
       <div className="mb-3">
@@ -47,9 +48,9 @@ const Form = () => {
       </div>
       <p className="italic text-15 text-slate-500 dark:text-zink-200">
         By registering you agree to the Tailwick{' '}
-        <a href="#!" className="underline">
+        <Link href="#!" className="underline">
           Terms of Use
-        </a>
+        </Link>
       </p>
       <div className="mt-10">
         <button
@@ -71,15 +72,15 @@ const Form = () => {
       <div className="mt-10 text-center">
         <p className="mb-0 text-slate-500 dark:text-zink-200">
           Already have an account ?{' '}
-          <a
-            href="auth-login-basic.html"
+          <Link
+            href="/login"
             className="font-semibold underline transition-all duration-150 ease-linear text-slate-500 dark:text-zink-200 hover:text-custom-500 dark:hover:text-custom-500"
           >
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </form>
   );
 };
-export default Form;
+export default RegisterForm;

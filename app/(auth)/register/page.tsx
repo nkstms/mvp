@@ -1,6 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import RegisterForm from '@/components/registerForm';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Register',
+};
 
 const RegisterPage = () => {
   return (
@@ -32,4 +37,5 @@ const RegisterPage = () => {
     </div>
   );
 };
+
 export default RegisterPage;

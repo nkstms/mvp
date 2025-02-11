@@ -66,6 +66,15 @@ const LoginForm = () => {
         </button>
       </div>
 
+      <div className="mt-4 text-center">
+        <Link
+          href="/forgot-password"
+          className="text-sm text-custom-500 hover:underline dark:text-custom-500"
+        >
+          Forgot Password?
+        </Link>
+      </div>
+
       <div className="relative text-center my-9 before:absolute before:top-3 before:left-0 before:right-0 before:border-t before:border-t-slate-200 dark:before:border-t-zink-500">
         <h5 className="inline-block px-2 py-0.5 text-sm bg-white text-slate-500 dark:bg-zink-600 dark:text-zink-200 rounded relative">
           Sign In with

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Public_Sans } from 'next/font/google';
 import './globals.css';
+import { Public_Sans } from 'next/font/google';
 
 const publicSans = Public_Sans({ subsets: ['latin'] });
 

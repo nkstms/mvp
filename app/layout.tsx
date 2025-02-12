@@ -10,9 +10,6 @@ export const metadata: Metadata = {
   description: 'MVP TMS',
   viewport: 'width=device-width, initial-scale=1.0, user-scalable=no',
   authors: [{ name: 'NKS' }],
-  icons: {
-    shortcut: { url: './favicon.ico' },
-  },
 };
 
 export default function RootLayout({

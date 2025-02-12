@@ -1,10 +1,7 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'Verify Email',
-};
 
 const VerifyEmailPage = () => {
   return (
@@ -31,16 +28,16 @@ const VerifyEmailPage = () => {
           <h4 className="mb-1 text-custom-500 dark:text-custom-500">Verify Email</h4>
           <p className="mb-4 text-slate-500 dark:text-zink-200">
             Did you not receive an email? Please{' '}
-            <Link href="#!" className="text-custom-500">
-              try again
-            </Link>
+            <button className="text-custom-500">try again</button>
           </p>
-          <button
-            type="button"
-            className="px-2 py-1.5 text-xs text-white transition-all duration-200 ease-linear btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600 active:border-custom-600 active:ring active:ring-custom-100 dark:ring-custom-400/20"
-          >
-            Skip Now
-          </button>
+          <Link href="/login">
+            <button
+              type="button"
+              className="px-2 py-1.5 text-xs text-white transition-all duration-200 ease-linear btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600 active:border-custom-600 active:ring active:ring-custom-100 dark:ring-custom-400/20"
+            >
+              Skip Now
+            </button>
+          </Link>
         </div>
 
         <div className="pt-10 text-center">

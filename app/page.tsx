@@ -42,6 +42,7 @@ export default function Home() {
       </div>
     );
   }
+  console.log(user);
 
   return (
     <div>

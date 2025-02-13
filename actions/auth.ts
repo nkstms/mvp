@@ -13,6 +13,7 @@ import { forgotPasswordschema, registerSchema } from '@/lib/zodSchema';
 type AuthResponse = {
   success: boolean;
   message: string;
+  email?: string | null;
 };
 
 export async function registerUser(prevState: AuthResponse | null, formData: FormData) {
@@ -34,7 +35,11 @@ export async function registerUser(prevState: AuthResponse | null, formData: For
 
     await sendEmailVerification(user);
 
-    return { success: true, message: 'Registration successful! Please verify your email' };
+    return {
+      success: true,
+      email: user.email,
+      message: 'Registration successful! Please verify your email',
+    };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { success: false, message: error.errors[0].message };

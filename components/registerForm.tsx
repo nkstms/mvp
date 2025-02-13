@@ -20,9 +20,9 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (state?.success) {
-      router.push('/verify-email');
+      router.push('/verify-email?email=' + state.email);
     }
-  }, [state?.success, router]);
+  }, [state?.success, router, state?.email]);
 
   return (
     <form action={formAction} className="mt-10" id="registerForm">

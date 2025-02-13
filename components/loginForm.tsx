@@ -1,29 +1,77 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
+import { sendEmailVerification, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import AuthIcons from './authIcons';
+import { auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const router = useRouter();
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    try {
+      if (email === '' || password === '') {
+        setError('Email and password are required');
+        return;
+      }
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        await sendEmailVerification(user);
+        await signOut(auth);
+        setError('Email not verified. A new verification email has been sent.');
+        return;
+      }
+
+      setSuccess('You have successfully signed in.');
+      router.push('/');
+      console.log('User:', user);
+    } catch {
+      setError('Invalid email or password. Please check your credentials and try again.');
+    }
+  };
+
   return (
-    <form action="index.html" className="mt-10" id="signInForm">
-      <div
-        className="hidden px-4 py-3 mb-3 text-sm text-green-500 border border-green-200 rounded-md bg-green-50 dark:bg-green-400/20 dark:border-green-500/50"
-        id="successAlert"
-      >
-        You have <b>successfully</b> signed in.
-      </div>
+    <form onSubmit={handleSignIn} className="mt-10">
+      {success && (
+        <div className="px-4 py-3 mb-3 text-sm text-green-500 border border-green-200 rounded-md bg-green-50 dark:bg-green-400/20 dark:border-green-500/50">
+          {success}
+        </div>
+      )}
+
+      {error && (
+        <div className="px-4 py-3 mb-3 text-sm text-red-500 border border-red-200 rounded-md bg-red-50 dark:bg-red-400/20 dark:border-red-500/50">
+          {error}
+        </div>
+      )}
+
       <div className="mb-3">
-        <label htmlFor="username" className="inline-block mb-2 text-base font-medium">
-          UserName/ Email ID
+        <label htmlFor="email" className="inline-block mb-2 text-base font-medium">
+          Email
         </label>
         <input
-          type="text"
-          id="username"
-          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-          placeholder="Enter username or email"
+          type="email"
+          id="email"
+          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
-        <div id="username-error" className="hidden mt-1 text-sm text-red-500">
-          Please enter a valid email address.
-        </div>
       </div>
+
       <div className="mb-3">
         <label htmlFor="password" className="inline-block mb-2 text-base font-medium">
           Password
@@ -31,46 +79,36 @@ const LoginForm = () => {
         <input
           type="password"
           id="password"
-          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-          placeholder="Enter password"
+          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <div id="password-error" className="hidden mt-1 text-sm text-red-500">
-          Password must be at least 8 characters long and contain both letters and numbers.
-        </div>
       </div>
-      <div>
-        <div className="flex items-center gap-2">
-          <input
-            id="checkboxDefault1"
-            className="border rounded-sm appearance-none size-4 bg-slate-100 border-slate-200 dark:bg-zink-600 dark:border-zink-500 checked:bg-custom-500 checked:border-custom-500 dark:checked:bg-custom-500 dark:checked:border-custom-500 checked:disabled:bg-custom-400 checked:disabled:border-custom-400"
-            type="checkbox"
-            value=""
-          />
-          <label
-            htmlFor="checkboxDefault1"
-            className="inline-block text-base font-medium align-middle cursor-pointer"
-          >
-            Remember me
-          </label>
-        </div>
-        <div id="remember-error" className="hidden mt-1 text-sm text-red-500">
-          Please check the &quot;Remember me&quot; before submitting the form.
-        </div>
+
+      <div className="flex items-center gap-2 mb-3">
+        <input
+          id="remember-me"
+          type="checkbox"
+          className="border rounded-sm appearance-none size-4 bg-slate-100 border-slate-200 dark:bg-zink-600 dark:border-zink-500 checked:bg-custom-500 checked:border-custom-500"
+        />
+        <label htmlFor="remember-me" className="inline-block text-base font-medium cursor-pointer">
+          Remember me
+        </label>
       </div>
+
       <div className="mt-10">
         <button
           type="submit"
-          className="w-full text-white btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600 active:border-custom-600 active:ring active:ring-custom-100 dark:ring-custom-400/20"
+          className="w-full text-white btn bg-custom-500 border-custom-500 hover:bg-custom-600 focus:ring focus:ring-custom-100 dark:ring-custom-400/20"
         >
           Sign In
         </button>
       </div>
 
       <div className="mt-4 text-center">
-        <Link
-          href="/forgot-password"
-          className="text-sm text-custom-500 hover:underline dark:text-custom-500"
-        >
+        <Link href="/forgot-password" className="text-sm text-custom-500 hover:underline">
           Forgot Password?
         </Link>
       </div>
@@ -84,18 +122,18 @@ const LoginForm = () => {
       <AuthIcons />
 
       <div className="mt-10 text-center">
-        <p className="mb-0 text-slate-500 dark:text-zink-200">
-          Don&apos;t have an account ?{' '}
+        <p className="text-slate-500 dark:text-zink-200">
+          Don&apos;t have an account?{' '}
           <Link
             href="/register"
-            className="font-semibold underline transition-all duration-150 ease-linear text-slate-500 dark:text-zink-200 hover:text-custom-500 dark:hover:text-custom-500"
+            className="font-semibold underline text-custom-500 hover:text-custom-600"
           >
-            {' '}
-            SignUp
-          </Link>{' '}
+            Sign Up
+          </Link>
         </p>
       </div>
     </form>
   );
 };
+
 export default LoginForm;

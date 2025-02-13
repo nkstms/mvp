@@ -39,7 +39,7 @@ const LoginForm = () => {
       router.push('/');
       console.log('User:', user);
     } catch {
-      setError('Account not found! Please sign up');
+      setError('Invalid email or password. Please check your credentials and try again.');
     }
   };
 

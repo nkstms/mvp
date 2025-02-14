@@ -97,8 +97,8 @@ const config: Config = {
         drawer: '1050',
       },
       backgroundImage: {
-        'auth-pattern': "url('/assets/images/auth-bg.jpg')",
-        'auth-pattern-dark': "url('/assets/images/auth-bg-dark.jpg')",
+        'auth-pattern': "url('/auth-bg.jpg')",
+        'auth-pattern-dark': "url('/auth-bg-dark.jpg')",
       },
       animation: {
         icons: 'iconsAnimation 50s',

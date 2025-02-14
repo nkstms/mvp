@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import UserProfile from '@/components/userProfile';
 
 export default function Home() {
@@ -7,20 +6,6 @@ export default function Home() {
       <h1 className="text-xl font-semibold">Espace de travail</h1>
       <div className="w-full max-w-md">
         <UserProfile />
-        <div className="flex flex-row items-center justify-center gap-2 mt-4">
-          <Link
-            href="/login"
-            className="inline-block px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/register"
-            className="inline-block px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
-          >
-            Sign Up
-          </Link>
-        </div>
       </div>
     </div>
   );

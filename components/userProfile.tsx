@@ -5,6 +5,7 @@ import { onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { auth } from '@/lib/firebase';
+import Link from 'next/link';
 
 export default function UserProfile() {
   const [user, setUser] = useState<User | null>(null);
@@ -41,7 +42,23 @@ export default function UserProfile() {
     );
   }
 
-  if (!user) return null;
+  if (!user)
+    return (
+      <div className="flex flex-row items-center justify-center gap-2 mt-4">
+        <Link
+          href="/login"
+          className="inline-block px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+        >
+          Sign In
+        </Link>
+        <Link
+          href="/register"
+          className="inline-block px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+        >
+          Sign Up
+        </Link>
+      </div>
+    );
 
   return (
     <div className="max-w-md w-full bg-white shadow-lg rounded-2xl p-6 text-gray-900">

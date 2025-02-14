@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { confirmPasswordReset, applyActionCode } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import CreatePasswordForm from '@/components/createPasswordForm';
@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic';
 
 // Create a wrapper component for the search params
 const AuthActionContent = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const oobCode = searchParams.get('oobCode');
   const mode = searchParams.get('mode');
@@ -22,7 +23,7 @@ const AuthActionContent = () => {
     try {
       setLoading(true);
       await applyActionCode(auth, oobCode as string);
-      setMessage('✅ Email verified successfully! You can now log in.');
+      router.push(`/auth-action/status?mode=verifyEmail`);
     } catch {
       setMessage('❌ Email verification failed. Link may be expired.');
     } finally {
@@ -39,7 +40,7 @@ const AuthActionContent = () => {
     try {
       setLoading(true);
       await confirmPasswordReset(auth, oobCode, newPassword);
-      setMessage('✅ Password reset successful! You can now log in.');
+      router.push(`/auth-action/status?mode=resetPassword`);
     } catch {
       setMessage('❌ Failed to reset password. Link may be expired.');
     } finally {

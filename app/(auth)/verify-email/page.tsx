@@ -1,13 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 
-const VerifyEmailPage = () => {
+export const dynamic = 'force-dynamic';
+
+// Create a content component that uses useSearchParams
+const VerifyEmailContent = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
   const [loading, setLoading] = useState(false);
@@ -99,6 +102,21 @@ const VerifyEmailPage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Main component with Suspense wrapper
+const VerifyEmailPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-custom-500"></div>
+        </div>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
   );
 };
 

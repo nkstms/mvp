@@ -8,7 +8,6 @@ const publicSans = Public_Sans({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'NKS TMS',
   description: 'MVP TMS',
-  viewport: 'width=device-width, initial-scale=1.0, user-scalable=no',
   authors: [{ name: 'NKS' }],
 };
 

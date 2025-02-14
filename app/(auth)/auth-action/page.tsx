@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { confirmPasswordReset, applyActionCode } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -8,10 +8,13 @@ import CreatePasswordForm from '@/components/createPasswordForm';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const AccountActionPage = () => {
+export const dynamic = 'force-dynamic';
+
+// Create a wrapper component for the search params
+const AuthActionContent = () => {
   const searchParams = useSearchParams();
-  const oobCode = searchParams.get('oobCode'); // Firebase action code
-  const mode = searchParams.get('mode'); // Action type: resetPassword or verifyEmail
+  const oobCode = searchParams.get('oobCode');
+  const mode = searchParams.get('mode');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -92,6 +95,21 @@ const AccountActionPage = () => {
         )}
       </div>
     </div>
+  );
+};
+
+// Main component with Suspense boundary
+const AccountActionPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-custom-500"></div>
+        </div>
+      }
+    >
+      <AuthActionContent />
+    </Suspense>
   );
 };
 

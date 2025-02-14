@@ -30,9 +30,7 @@ export default function RootLayout({
       data-content="fluid"
       dir="ltr"
     >
-      <body
-        className={`flex items-center justify-center min-h-screen py-16 lg:py-10 bg-slate-50 dark:bg-zink-800 dark:text-zink-100 ${publicSans.className} antialiased`}
-      >
+      <body className={`${publicSans.className} bg-slate-50 dark:bg-zink-800 dark:text-zink-100`}>
         {children}
         <SpeedInsights />
       </body>

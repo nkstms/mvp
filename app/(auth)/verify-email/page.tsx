@@ -1,41 +1,15 @@
-'use client';
-
-import { useState, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { auth } from '@/lib/firebase';
-import { sendSignInLinkToEmail } from 'firebase/auth';
+import { ResendVerificationButton } from '@/components/resend-verification-button';
 
 export const dynamic = 'force-dynamic';
 
-// Create a content component that uses useSearchParams
-const VerifyEmailContent = () => {
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email');
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
-
-  const handleResendVerification = async () => {
-    if (!email) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setMessage(null);
-
-      await sendSignInLinkToEmail(auth, email, {
-        url: `${window.location.origin}/verify-email?email=${email}`,
-        handleCodeInApp: true,
-      });
-      setMessage({ text: 'Verification email sent again! Check your inbox.', type: 'success' });
-    } catch {
-      setMessage({ text: 'Error resending email', type: 'error' });
-    } finally {
-      setLoading(false);
-    }
-  };
+const VerifyEmailPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const email = (await searchParams).email as string;
 
   return (
     <div className="mb-0 w-screen lg:w-[500px] card shadow-lg border-none shadow-slate-100 relative">
@@ -60,26 +34,8 @@ const VerifyEmailContent = () => {
         <div className="mt-8 text-center">
           <h4 className="mb-1 text-custom-500 dark:text-custom-500">Verify Email</h4>
           <p className="mb-4 text-slate-500 dark:text-zink-200">
-            Did you not receive an email? Please{' '}
-            <button
-              className="text-custom-500"
-              onClick={handleResendVerification}
-              disabled={loading}
-            >
-              {loading ? 'Resending...' : 'try again'}
-            </button>
+            Did you not receive an email? Please <ResendVerificationButton email={email} />
           </p>
-
-          {/* Display message if exists */}
-          {message && (
-            <p
-              className={`mt-2 text-sm ${
-                message.type === 'success' ? 'text-green-600' : 'text-red-600'
-              }`}
-            >
-              {message.text}
-            </p>
-          )}
 
           <Link href="/login">
             <button
@@ -102,21 +58,6 @@ const VerifyEmailContent = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-// Main component with Suspense wrapper
-const VerifyEmailPage = () => {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-custom-500"></div>
-        </div>
-      }
-    >
-      <VerifyEmailContent />
-    </Suspense>
   );
 };
 

@@ -2,25 +2,35 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { z } from 'zod';
+import { passwordSchema } from '@/lib/zodSchema';
 
-interface CreatePasswordFormProps {
+type CreatePasswordFormProps = {
   onSubmit: (newPassword: string) => void;
   isLoading: boolean;
-}
+};
 
 const CreatePasswordForm: React.FC<CreatePasswordFormProps> = ({ onSubmit, isLoading }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
+    try {
+      const result = passwordSchema.parse({ password, confirmPassword });
+      setErrors({});
+      onSubmit(result.password);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errorMap: { [key: string]: string } = {};
+        error.errors.forEach((err) => {
+          const path = err.path[0] as string;
+          errorMap[path] = err.message;
+        });
+        setErrors(errorMap);
+      }
     }
-    setError('');
-    onSubmit(password);
   };
 
   return (
@@ -31,13 +41,15 @@ const CreatePasswordForm: React.FC<CreatePasswordFormProps> = ({ onSubmit, isLoa
         </label>
         <input
           type="password"
-          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 dark:disabled:border-zink-500 dark:disabled:text-zink-200 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-          required
+          className={`form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 dark:disabled:border-zink-500 dark:disabled:text-zink-200 placeholder:text-slate-400 dark:placeholder:text-zink-200 ${
+            errors.password ? 'border-red-500' : ''
+          }`}
           placeholder="Password"
           id="passwordInput"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
       </div>
       <div className="mb-3">
         <label htmlFor="passwordConfirmInput" className="inline-block mb-2 text-base font-medium">
@@ -45,16 +57,18 @@ const CreatePasswordForm: React.FC<CreatePasswordFormProps> = ({ onSubmit, isLoa
         </label>
         <input
           type="password"
-          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 dark:disabled:border-zink-500 dark:disabled:text-zink-200 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-          required
+          className={`form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 dark:disabled:border-zink-500 dark:disabled:text-zink-200 placeholder:text-slate-400 dark:placeholder:text-zink-200 ${
+            errors.confirmPassword ? 'border-red-500' : ''
+          }`}
           placeholder="Confirm password"
           id="passwordConfirmInput"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+        )}
       </div>
-
-      {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
       <div className="mt-8">
         <button

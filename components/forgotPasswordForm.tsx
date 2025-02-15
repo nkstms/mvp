@@ -3,14 +3,36 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { resetPassword } from '@/actions/auth';
+import { useState } from 'react';
+import { forgotPasswordSchema } from '@/lib/zodSchema';
 
 const ForgotPasswordForm = () => {
   const [state, formAction, isPending] = useActionState(resetPassword, null);
+  const [errors, setErrors] = useState<{ email?: string }>({});
+
+  const handleSubmit = async (formData: FormData) => {
+    const result = forgotPasswordSchema.safeParse({
+      email: formData.get('email'),
+    });
+
+    if (!result.success) {
+      setErrors(
+        result.error.errors.reduce((acc, error) => {
+          acc[error.path[0] as 'email'] = error.message;
+          return acc;
+        }, {} as { email?: string })
+      );
+      return;
+    }
+
+    setErrors({});
+    formAction(formData);
+  };
 
   return (
-    <form action={formAction} className="mt-8">
+    <form action={handleSubmit} className="mt-8">
       {state?.message && (
-        <p className={`mt-3 ${state?.success ? 'text-red-500' : 'text-green-500'}`}>
+        <p className={`mt-3 ${state?.success ? 'text-green-500' : 'text-red-500'}`}>
           {state.message}
         </p>
       )}
@@ -19,12 +41,15 @@ const ForgotPasswordForm = () => {
           Email
         </label>
         <input
-          type="text"
+          type="email"
           name="email"
-          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+          className={`form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200 ${
+            errors.email ? 'border-red-500' : ''
+          }`}
           placeholder="Enter email"
           id="emailInput"
         />
+        {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
       </div>
       <div className="mt-8">
         <button

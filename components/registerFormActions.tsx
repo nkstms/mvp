@@ -9,8 +9,13 @@ import { registerUser } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 
 const ClientForm = () => {
-  const { register } = useForm<RegisterFormValues>({
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
+    mode: 'onBlur',
   });
 
   const [state, formAction, isPending] = useActionState(registerUser, null);
@@ -22,8 +27,15 @@ const ClientForm = () => {
     }
   }, [state?.success, router, state?.email]);
 
+  const onSubmit = handleSubmit(async (data) => {
+    const formData = new FormData();
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    await formAction(formData);
+  });
+
   return (
-    <form action={formAction} className="mt-10" id="registerForm">
+    <form onSubmit={onSubmit} className="mt-10" id="registerForm">
       {state?.message && (
         <p className={`mt-3 ${state?.success ? 'text-green-500' : 'text-red-500'}`}>
           {state.message}
@@ -38,9 +50,12 @@ const ClientForm = () => {
           {...register('email')}
           type="text"
           id="email-field"
-          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+          className={`form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200 ${
+            errors.email ? 'border-red-500' : ''
+          }`}
           placeholder="Enter email"
         />
+        {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
       </div>
 
       <div className="mb-3">
@@ -51,9 +66,12 @@ const ClientForm = () => {
           {...register('password')}
           type="password"
           id="password"
-          className="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+          className={`form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200 ${
+            errors.password ? 'border-red-500' : ''
+          }`}
           placeholder="Enter password"
         />
+        {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
       </div>
 
       <p className="italic text-15 text-slate-500 dark:text-zink-200">

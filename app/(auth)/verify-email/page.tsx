@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ResendVerificationButton } from '@/components/resend-verification-button';
+import { ResendVerificationButton } from '@/components/resendVerificationButton';
 
 export const dynamic = 'force-dynamic';
 

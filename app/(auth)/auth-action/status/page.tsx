@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { StatusClientContent } from '@/components/status-client';
+import { StatusClientContent } from '@/components/statusClient';
 
 export const dynamic = 'force-dynamic';
 

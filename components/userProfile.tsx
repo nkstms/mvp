@@ -65,7 +65,7 @@ export default function UserProfile() {
       <div className="flex flex-col items-center text-center">
         <div className="relative w-24 h-24">
           <Image
-            src={user.photoURL || '/offline.png'}
+            src={user.photoURL || '/avatar-1.png'}
             alt="Profile Picture"
             width={96}
             height={96}

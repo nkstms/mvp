@@ -109,12 +109,14 @@ export default function Navbar() {
                 <Link
                   href="/profile"
                   className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                  onClick={() => setProfileOpen(false)}
                 >
                   <Profile size={16} /> Profile
                 </Link>
                 <Link
                   href="/inbox"
                   className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                  onClick={() => setProfileOpen(false)}
                 >
                   <Mail size={16} /> Inbox
                 </Link>
@@ -179,7 +181,7 @@ export default function Navbar() {
           </div>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 bg-custom-500 text-white dark:text-black rounded-lg hover:bg-custom-600 transition-colors"
+            className="md:hidden p-2 bg-custom-500 dark:text-white text-black rounded-lg hover:bg-custom-600 transition-colors"
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

@@ -37,7 +37,7 @@ export default function UserProfile() {
   if (loading || loggingOut) {
     return (
       <div className="grid place-items-center min-h-screen">
-        <p className="text-lg text-gray-500">Loading...</p>
+        <p className="text-lg text-gray-500 dark:text-gray-400">Loading...</p>
       </div>
     );
   }
@@ -47,13 +47,13 @@ export default function UserProfile() {
       <div className="flex flex-row items-center justify-center gap-2 mt-4">
         <Link
           href="/login"
-          className="inline-block px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+          className="inline-block px-6 py-2 text-white bg-blue-600 dark:bg-blue-500 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition"
         >
           Sign In
         </Link>
         <Link
           href="/register"
-          className="inline-block px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+          className="inline-block px-6 py-2 text-white bg-blue-600 dark:bg-blue-500 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition"
         >
           Sign Up
         </Link>
@@ -61,7 +61,7 @@ export default function UserProfile() {
     );
 
   return (
-    <div className="max-w-md w-full bg-white shadow-lg rounded-2xl p-6 text-gray-900">
+    <div className="max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 text-gray-900 dark:text-gray-100">
       <div className="flex flex-col items-center text-center">
         <div className="relative w-24 h-24">
           <Image
@@ -69,27 +69,27 @@ export default function UserProfile() {
             alt="Profile Picture"
             width={96}
             height={96}
-            className="rounded-full border-2 border-gray-300 shadow-sm"
+            className="rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-sm"
           />
         </div>
 
         <h1 className="mt-4 text-2xl font-semibold">{user.displayName || 'User'} 👋</h1>
-        <p className="text-sm text-gray-500">{user.email}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
 
         <span
           className={`mt-2 px-3 py-1 text-xs font-medium rounded-full ${
-            user.emailVerified ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+            user.emailVerified
+              ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400'
+              : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400'
           }`}
         >
           {user.emailVerified ? '✅ Verified' : '❌ Not Verified'}
         </span>
       </div>
 
-      <div className="mt-6 space-y-3">{/* ...existing user details code... */}</div>
-
       <button
         onClick={handleLogout}
-        className="mt-6 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition"
+        className="mt-6 w-full bg-red-600 dark:bg-red-500 dark:text-white text-black py-2 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition"
       >
         Logout
       </button>

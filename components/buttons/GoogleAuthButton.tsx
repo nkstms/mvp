@@ -20,7 +20,7 @@ export const GoogleAuthButton = ({ children }: { children: React.ReactNode }) =>
   return (
     <button
       type="button"
-      className="flex items-center justify-center size-[37.5px] transition-all duration-200 ease-linear p-0 text-white btn bg-orange-500 border-orange-500 hover:text-white hover:bg-orange-600 hover:border-orange-600 focus:text-white focus:bg-orange-600 focus:border-orange-600 active:text-white active:bg-orange-600 active:border-orange-600"
+      className="flex items-center justify-center size-[37.5px] transition-all duration-200 ease-linear p-0 bg-white text-gray-600 btn border border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:bg-gray-50 focus:border-gray-400 active:bg-gray-100"
       onClick={handleGoogleSignIn}
     >
       {children}

@@ -20,7 +20,7 @@ export const FacebookAuthButton = ({ children }: { children: React.ReactNode }) 
   return (
     <button
       type="button"
-      className="flex items-center justify-center size-[37.5px] transition-all duration-200 ease-linear p-0 text-white btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 active:text-white active:bg-custom-600 active:border-custom-600"
+      className="flex items-center justify-center size-[37.5px] transition-all duration-200 ease-linear p-0 text-white btn bg-[#1877f2] border-[#1877f2] hover:bg-[#0c64d2] hover:border-[#0c64d2] focus:bg-[#0c64d2] focus:border-[#0c64d2] active:bg-[#0c64d2]"
       onClick={handleFacebookSignIn}
     >
       {children}

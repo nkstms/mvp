@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { ModeToggle } from '@/components/mode-toggle';
@@ -39,6 +40,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -121,7 +123,11 @@ export default function Navbar() {
                   <Mail size={16} /> Inbox
                 </Link>
                 <button
-                  onClick={() => signOut(auth)}
+                  onClick={() => {
+                    signOut(auth);
+                    setProfileOpen(false);
+                    router.push('/login');
+                  }}
                   className="w-full text-left p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
                 >
                   Sign Out

@@ -1,19 +1,46 @@
 'use client';
 
-import React, { useState } from 'react';
+import { getUsers } from '../types/employee';//
+
+import React, { useEffect, useState } from 'react';//
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { Employee, SortField, SortDirection } from '../types/employee';
+import { Users, SortField, SortDirection } from '../types/employee';
 
-interface ClientTableProps {
-  initialData: Employee[];
-}
 
-export default function ClientTable({ initialData }: ClientTableProps) {
+// interface ClientTableProps {
+//   initialData: Users[];
+// }
+
+// export default function ClientTable({ initialData }: ClientTableProps) {
+export default function ClientTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [entriesCount, setEntriesCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] = useState<SortField>('name');
+  const [sortField, setSortField] = useState<SortField>('nom');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  const [users, setUsers] = useState<Users[]>([]);//
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {//
+    const fetchClients = async () => {
+      try{
+      const data = await getUsers();
+      setUsers(data);
+      setError(null)
+    }catch(error){
+      console.error("Failed to fetch users:",error)
+      setError("Failed to fetch users. Please try again later.");
+    }finally{
+      setLoading(false)
+    }
+    };
+    
+    fetchClients();
+  }, []);//
+  
+  console.log(users)//
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -37,10 +64,10 @@ export default function ClientTable({ initialData }: ClientTableProps) {
     );
   };
 
-  const sortedAndFilteredEmployees = initialData
-    .filter((employee) =>
-      Object.values(employee).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  const sortedAndFilteredEmployees = users
+    .filter((user) =>
+      Object.values(user).some((value) =>
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase().trim())
       )
     )
     .sort((a, b) => {
@@ -65,6 +92,14 @@ export default function ClientTable({ initialData }: ClientTableProps) {
   const startIndex = (currentPage - 1) * entriesCount;
   const endIndex = startIndex + entriesCount;
   const currentItems = sortedAndFilteredEmployees.slice(startIndex, endIndex);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -107,40 +142,64 @@ export default function ClientTable({ initialData }: ClientTableProps) {
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th
-                  onClick={() => handleSort('name')}
+                  onClick={() => handleSort('nom')}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                 >
-                  Name <SortIcon field="name" />
+                  nom <SortIcon field="nom" />
                 </th>
                 <th
-                  onClick={() => handleSort('position')}
+                  onClick={() => handleSort('prenom')}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                 >
-                  Position <SortIcon field="position" />
+                  prenom <SortIcon field="prenom" />
                 </th>
                 <th
-                  onClick={() => handleSort('office')}
+                  onClick={() => handleSort('email')}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                 >
-                  Office <SortIcon field="office" />
+                  email <SortIcon field="email" />
                 </th>
                 <th
-                  onClick={() => handleSort('age')}
+                  onClick={() => handleSort('telephone')}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                 >
-                  Age <SortIcon field="age" />
+                  telephone <SortIcon field="telephone" />
                 </th>
                 <th
-                  onClick={() => handleSort('startDate')}
+                  onClick={() => handleSort('dateInscription')}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                 >
-                  Start date <SortIcon field="startDate" />
+                  date d &apos inscription <SortIcon field="dateInscription" />
                 </th>
                 <th
-                  onClick={() => handleSort('salary')}
+                  onClick={() => handleSort('lieu')}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                 >
-                  Salary <SortIcon field="salary" />
+                  lieu <SortIcon field="lieu" />
+                </th>
+                <th
+                  onClick={() => handleSort('typeStructure')}
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                >
+                  type de structure <SortIcon field="typeStructure" />
+                </th>
+                <th
+                  onClick={() => handleSort('typeCompte')}
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                >
+                  type de Compte <SortIcon field="typeCompte" />
+                </th>
+                <th
+                  onClick={() => handleSort('statutCompte')}
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                >
+                  statut de compte <SortIcon field="statutCompte" />
+                </th>
+                <th
+                  onClick={() => handleSort('typeProfil')}
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                >
+                  type de profil <SortIcon field="typeProfil" />
                 </th>
               </tr>
             </thead>
@@ -148,20 +207,34 @@ export default function ClientTable({ initialData }: ClientTableProps) {
               {currentItems.map((employee, index) => (
                 <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
-                    {employee.name}
+                    {employee.nom}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
-                    {employee.position}
+                    {employee.prenom}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
-                    {employee.office}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">{employee.age}</td>
-                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
-                    {employee.startDate}
+                    {employee.email}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
-                    ${employee.salary.toLocaleString()}
+                    {employee.telephone}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
+                    {employee.dateInscription}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
+                    {employee.lieu}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
+                    {employee.typeStructure}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
+                    {employee.typeCompte}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
+                    {employee.statutCompte}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
+                    {employee.typeProfil}
                   </td>
                 </tr>
               ))}
@@ -195,3 +268,16 @@ export default function ClientTable({ initialData }: ClientTableProps) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

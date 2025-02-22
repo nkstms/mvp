@@ -3,9 +3,10 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // Adjust the import path
 
 
+
 export interface Users {
-  id?:string ;
-  photoURL: string;
+  id:string ;
+  photoURL?: string;
   nom: string;
   prenom: string;
   email: string;
@@ -29,6 +30,10 @@ export const getUsers = async (): Promise<Users[]> => {
   });
   return data;
 };
+
+
+
+
 
 
 

@@ -1,10 +1,10 @@
-'use client';
-
+"use client"
 import { getUsers } from '../types/employee';//
 
 import React, { useEffect, useState } from 'react';//
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Users, SortField, SortDirection } from '../types/employee';
+
 
 
 // interface ClientTableProps {
@@ -140,7 +140,13 @@ export default function ClientTable() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
-              <tr>
+    <th
+      onClick={() => handleSort('nom')}
+      className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+    >
+      nom <SortIcon field="nom" />
+    </th>
+    {/* Other columns... */}
                 <th
                   onClick={() => handleSort('nom')}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-900 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
@@ -201,11 +207,16 @@ export default function ClientTable() {
                 >
                   type de profil <SortIcon field="typeProfil" />
                 </th>
-              </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {currentItems.map((employee, index) => (
                 <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
+        {employee.nom}
+      </td>
+      {/* Other columns... */}
+    </tr>
                   <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
                     {employee.nom}
                   </td>
@@ -268,6 +279,17 @@ export default function ClientTable() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

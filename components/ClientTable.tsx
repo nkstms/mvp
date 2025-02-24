@@ -1,46 +1,23 @@
 "use client"
-import { getUsers } from '../types/employee';//
 
-import React, { useEffect, useState } from 'react';//
+import React, { useState } from 'react';//
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { Users, SortField, SortDirection } from '../types/employee';
+import { Users, SortField, SortDirection } from '../types/user';
 
 
 
-// interface ClientTableProps {
-//   initialData: Users[];
-// }
 
-// export default function ClientTable({ initialData }: ClientTableProps) {
-export default function ClientTable() {
+
+interface ClientTableProps {
+  initialData: Users[];
+}
+
+export default function ClientTable({ initialData }: ClientTableProps) {//
   const [searchTerm, setSearchTerm] = useState('');
   const [entriesCount, setEntriesCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<SortField>('nom');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-
-  const [users, setUsers] = useState<Users[]>([]);//
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {//
-    const fetchClients = async () => {
-      try{
-      const data = await getUsers();
-      setUsers(data);
-      setError(null)
-    }catch(error){
-      console.error("Failed to fetch users:",error)
-      setError("Failed to fetch users. Please try again later.");
-    }finally{
-      setLoading(false)
-    }
-    };
-    
-    fetchClients();
-  }, []);//
-  
-  console.log(users)//
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -64,7 +41,7 @@ export default function ClientTable() {
     );
   };
 
-  const sortedAndFilteredEmployees = users
+  const sortedAndFilteredEmployees = initialData
     .filter((user) =>
       Object.values(user).some((value) =>
         value.toString().toLowerCase().includes(searchTerm.toLowerCase().trim())
@@ -93,13 +70,7 @@ export default function ClientTable() {
   const endIndex = startIndex + entriesCount;
   const currentItems = sortedAndFilteredEmployees.slice(startIndex, endIndex);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
+  
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -282,21 +253,7 @@ export default function ClientTable() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////////
 
 
 

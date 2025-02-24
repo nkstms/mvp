@@ -5,9 +5,6 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Users, SortField, SortDirection } from '../types/user';
 
 
-
-
-
 interface ClientTableProps {
   initialData: Users[];
 }
